@@ -15,6 +15,10 @@ set ( CMAKE_CXX_EXTENSIONS        OFF )
 
 # Source
 
+set ( EXTERNAL
+  src/external/stb_image.h
+)
+
 set ( SOURCE_ONE_WEEKEND
   src/InOneWeekend/main.cc
   src/InOneWeekend/includes/camera.h
@@ -27,6 +31,23 @@ set ( SOURCE_ONE_WEEKEND
   src/InOneWeekend/includes/rtweekend.h
   src/InOneWeekend/includes/sphere.h
   src/InOneWeekend/includes/vec3.h
+)
+
+set ( SOURCE_NEXT_WEEK
+  src/TheNextWeek/main.cc
+  src/TheNextWeek/includes/aabb.h
+  src/TheNextWeek/includes/bvh.h
+  src/TheNextWeek/includes/camera.h
+  src/TheNextWeek/includes/color.h
+  src/TheNextWeek/includes/hittable.h
+  src/TheNextWeek/includes/hittable_list.h
+  src/TheNextWeek/includes/interval.h
+  src/TheNextWeek/includes/material.h
+  src/TheNextWeek/includes/ray.h
+  src/TheNextWeek/includes/rtweekend.h
+  src/TheNextWeek/includes/texture.h
+  src/TheNextWeek/includes/sphere.h
+  src/TheNextWeek/includes/vec3.h
 )
 
 
@@ -61,3 +82,4 @@ endif()
 
 # Executables
 add_executable(inOneWeekend      ${SOURCE_ONE_WEEKEND})
+add_executable(theNextWeek       ${EXTERNAL} ${SOURCE_NEXT_WEEK})
