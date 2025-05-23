@@ -39,6 +39,7 @@ set ( SOURCE_NEXT_WEEK
   src/TheNextWeek/includes/bvh.h
   src/TheNextWeek/includes/camera.h
   src/TheNextWeek/includes/color.h
+  src/TheNextWeek/includes/constant_medium.h
   src/TheNextWeek/includes/hittable.h
   src/TheNextWeek/includes/hittable_list.h
   src/TheNextWeek/includes/interval.h

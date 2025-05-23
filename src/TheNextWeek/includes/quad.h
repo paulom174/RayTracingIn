@@ -2,6 +2,7 @@
 #define QUAD_H
 
 #include "hittable.h"
+#include "hittable_list.h"
 
 class quad : public hittable {
   public:
@@ -11,6 +12,7 @@ class quad : public hittable {
         auto n = cross(u, v);
         normal = unit_vector(n);
         D = dot(normal, Q);
+        w = n / dot(n,n);
 
         set_bounding_box();
     }
@@ -36,6 +38,7 @@ class quad : public hittable {
         if (!ray_t.contains(t))
             return false;
 
+        // Determine if the hit point lies within the planar shape using its plane coordinates.
         auto intersection = r.at(t);
         vec3 planar_hitpt_vector = intersection - Q;
         auto alpha = dot(w, cross(planar_hitpt_vector, v));
@@ -45,7 +48,6 @@ class quad : public hittable {
             return false;
 
         // Ray hits the 2D shape; set the rest of the hit record and return true.
-
         rec.t = t;
         rec.p = intersection;
         rec.mat = mat;
@@ -76,5 +78,30 @@ class quad : public hittable {
     vec3 normal;
     double D;
 };
+
+inline shared_ptr<hittable_list> box(const point3& a, const point3& b, shared_ptr<material> mat)
+{
+    // Returns the 3D box (six sides) that contains the two opposite vertices a & b.
+
+    auto sides = make_shared<hittable_list>();
+
+    // Construct the two opposite vertices with the minimum and maximum coordinates.
+    auto min = point3(std::fmin(a.x(),b.x()), std::fmin(a.y(),b.y()), std::fmin(a.z(),b.z()));
+    auto max = point3(std::fmax(a.x(),b.x()), std::fmax(a.y(),b.y()), std::fmax(a.z(),b.z()));
+
+    auto dx = vec3(max.x() - min.x(), 0, 0);
+    auto dy = vec3(0, max.y() - min.y(), 0);
+    auto dz = vec3(0, 0, max.z() - min.z());
+
+    sides->add(make_shared<quad>(point3(min.x(), min.y(), max.z()),  dx,  dy, mat)); // front
+    sides->add(make_shared<quad>(point3(max.x(), min.y(), max.z()), -dz,  dy, mat)); // right
+    sides->add(make_shared<quad>(point3(max.x(), min.y(), min.z()), -dx,  dy, mat)); // back
+    sides->add(make_shared<quad>(point3(min.x(), min.y(), min.z()),  dz,  dy, mat)); // left
+    sides->add(make_shared<quad>(point3(min.x(), max.y(), max.z()),  dx, -dz, mat)); // top
+    sides->add(make_shared<quad>(point3(min.x(), min.y(), min.z()),  dx,  dz, mat)); // bottom
+
+    return sides;
+}
+
 
 #endif
